@@ -1,4 +1,7 @@
 function ConvertCSV(){
+	this.commaSplitData;
+	this.headingRow;
+	this.newShopifyData = [];
 	//key is netsuite index/column
 	//value is shopify index/column
 	//tags figured out by category column 17
@@ -31,3 +34,29 @@ function ConvertCSV(){
 		"45":12
 	};
 }
+
+ConvertCSV.prototype.setData = function(commaSplitData) {
+	this.commaSplitData = commaSplitData;
+};
+
+ConvertCSV.prototype.setHeadingRow = function(commaSplitData) {
+	this.headingRow = commaSplitData[0];
+};
+
+ConvertCSV.prototype.checkTag = function() {
+	
+};
+
+ConvertCSV.prototype.checkProvince = function() {
+	
+};
+
+ConvertCSV.prototype.checkName = function() {
+	
+};
+
+//need to make sure emtpy is filled with ,
+ConvertCSV.prototype.convertCSV = function() {
+	this.newShopifyData.push(this.headingRow);
+	console.log(this.commaSplitData,this.headingRow);
+};

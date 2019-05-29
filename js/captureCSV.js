@@ -38,6 +38,10 @@ CaptureCSV.prototype.readFile = function(csvFile){
 			let newLineSplitFile = fileString.split("\n");
 			this.addBlank(newLineSplitFile);
 			this.commaSplitArr = this.splitByCommas(newLineSplitFile);
+
+			if(this.commaSplitArr[this.commaSplitArr.length - 1].length === 1){
+				this.commaSplitArr.pop();
+			}
 			resolve(this.commaSplitArr);
 			
 		}.bind(this);

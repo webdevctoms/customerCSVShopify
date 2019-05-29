@@ -1,12 +1,14 @@
-function App(dropZoneID,downloadID,testButtonID,convertButtonID){
+function App(dropZoneID,downloadID,testButtonID,convertButtonID,templateDropID){
 	this.csvDropZone = document.getElementById(dropZoneID);
+	this.templateDropZone = document.getElementById(templateDropID);
 	this.downloadLink = document.getElementById(downloadID);
 	this.testButton = document.getElementById(testButtonID);
 	this.convertButton = document.getElementById(convertButtonID);
 
+	this.templateHeadingLength = 19;
 	this.commaSplitData;
 	this.captureCSV = new CaptureCSV();
-
+	this.converter = new ConvertCSV();
 	this.initApp();
 }
 
@@ -31,15 +33,22 @@ App.prototype.initApp = function() {
 		this.convertClicked();
 	}.bind(this),false);
 
+	this.templateDropZone.addEventListener("drop",function(e){
+		e.preventDefault();
+		this.fileDropped(e);
+	}.bind(this),false);
+
+	//need this to prevent default downloading of file
+	this.templateDropZone.addEventListener("dragover",function(e){
+		e.preventDefault();
+	}.bind(this),false);
+
 };
 
 App.prototype.runTests = function(){
 	console.log("run tests");
 	try{
 		Tests.checkLength(this.commaSplitData,this.commaSplitData[0].length);
-		Tests.checkRemovedCustomer(this.customerRemovedArr,this.emptyIndex);
-		Tests.checkRemovedCustomer(this.customersToRemove,this.emptyIndex,true);
-		Tests.checkFilteredCustomer(this.filterData,this.nameArray,this.editItemCodes.itemCodeIndex);
 
 	}
 	catch(err){
@@ -49,6 +58,13 @@ App.prototype.runTests = function(){
 
 App.prototype.convertClicked = function(){
 	console.log("convert data");
+	try{
+		this.converter.convertCSV();
+	}
+	catch(err){
+		console.log("error converting ",err);
+	}
+	
 };
 
 App.prototype.createBlob = function(arr){
@@ -71,9 +87,14 @@ App.prototype.fileDropped = function(event){
 	this.captureCSV.readFile(csvFile)
 
 	.then(commaSplitData => {
-		this.commaSplitData = commaSplitData;
-		console.log(this.commaSplitData);
-		
+		console.log(commaSplitData[0].length,commaSplitData[0].length === this.templateHeadingLength);
+		if(commaSplitData[0].length === this.templateHeadingLength){
+			this.converter.setHeadingRow(commaSplitData);
+		}
+		else{
+			this.commaSplitData = commaSplitData;
+			this.converter.setData(commaSplitData);
+		}
 	})
 
 	.catch(err => {
@@ -82,4 +103,4 @@ App.prototype.fileDropped = function(event){
 	//console.log(this.commaSplitData);
 };
 
-let app = new App("drop_zone","downloadLink","testData","convertData");
+let app = new App("drop_zone","downloadLink","testData","convertData","template_drop_zone");
