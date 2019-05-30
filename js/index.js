@@ -50,7 +50,8 @@ App.prototype.runTests = function(){
 	console.log("run tests");
 	try{
 		Tests.checkLength(this.commaSplitData,this.commaSplitData[0].length);
-
+		Tests.checkLength(this.newShopifyData,this.newShopifyData[0].length);
+		Tests.checkTags(this.newShopifyData);
 	}
 	catch(err){
 		console.log("error testing ",err);
@@ -82,9 +83,7 @@ App.prototype.createBlob = function(arr){
 
 	arr.forEach(function(rowArr,index){
 		let row = rowArr.join("");
-		//console.log(row);
 		lineArray.push(row);	
-		//lineArray.push(row);
 	});
 	let csvContent = lineArray.join("\n");
 	let csvData = new Blob([csvContent],{type:'text/csv'});
@@ -110,7 +109,6 @@ App.prototype.fileDropped = function(event){
 	.catch(err => {
 		console.log("error reading file", err);
 	});
-	//console.log(this.commaSplitData);
 };
 
 let app = new App("drop_zone","downloadLink","testData","convertData","template_drop_zone");

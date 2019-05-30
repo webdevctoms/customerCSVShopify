@@ -43,18 +43,6 @@ ConvertCSV.prototype.setHeadingRow = function(commaSplitData) {
 	this.headingRow = commaSplitData[0];
 };
 
-ConvertCSV.prototype.checkTag = function() {
-	
-};
-
-ConvertCSV.prototype.checkProvince = function() {
-	
-};
-
-ConvertCSV.prototype.checkName = function() {
-	
-};
-
 ConvertCSV.prototype.buildShopifyArray = function(rows) {
 	this.newShopifyData.push(this.headingRow);
 	for(let i = 1;i < rows;i++){
@@ -67,9 +55,9 @@ ConvertCSV.prototype.buildShopifyArray = function(rows) {
 
 //need to make sure emtpy is filled with ,
 ConvertCSV.prototype.convertCSV = function() {
-	this.buildShopifyArray(20);
+	this.buildShopifyArray(this.commaSplitData.length);
 	console.log(this.commaSplitData,this.headingRow,this.newShopifyData);
-	for(let i = 1;i < 20;i++){
+	for(let i = 1;i < this.commaSplitData.length;i++){
 		let rowData = [];
 		for(let k = 0;k < this.commaSplitData[i].length;k++){
 			//handle tags
@@ -79,7 +67,7 @@ ConvertCSV.prototype.convertCSV = function() {
 					this.newShopifyData[i][16] = splitData[1].trim();
 				}
 				else{
-					this.newShopifyData[i][16] = this.commaSplitData[i][k];
+					this.newShopifyData[i][16] = this.commaSplitData[i][k].trim();
 				}
 			}
 			//handle mapping

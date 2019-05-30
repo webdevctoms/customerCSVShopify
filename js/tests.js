@@ -1,5 +1,6 @@
 Tests = {
-	checkLength
+	checkLength,
+	checkTags
 };
 
 function checkLength(arr,arrLength){
@@ -21,5 +22,25 @@ function checkLength(arr,arrLength){
 
 	if(incorrectIndexes.length === 0){
 		console.log("Length test passed");
+	}
+	else{
+		console.log("Length test failed");
+	}
+}
+
+function checkTags(arr){
+	let incorrectIndexes = [];
+	console.log("checking tags");
+	for(let i = 1;i < arr.length;i++){
+		if(arr[i][16].includes(":")){
+			incorrectIndexes.push(i);
+		}
+	}
+
+	if(incorrectIndexes.length === 0){
+		console.log("Tag test passed");
+	}
+	else{
+		console.log("tag test failed");
 	}
 }
