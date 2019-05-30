@@ -5,6 +5,7 @@ function App(dropZoneID,downloadID,testButtonID,convertButtonID,templateDropID){
 	this.testButton = document.getElementById(testButtonID);
 	this.convertButton = document.getElementById(convertButtonID);
 
+	this.newShopifyData;
 	this.templateHeadingLength = 19;
 	this.commaSplitData;
 	this.captureCSV = new CaptureCSV();
@@ -59,12 +60,21 @@ App.prototype.runTests = function(){
 App.prototype.convertClicked = function(){
 	console.log("convert data");
 	try{
-		this.converter.convertCSV();
+		this.newShopifyData = this.converter.convertCSV();
+		let csvData = this.createBlob(this.newShopifyData);
+		this.createDownload(csvData,this.downloadLink);
 	}
 	catch(err){
 		console.log("error converting ",err);
 	}
 	
+};
+
+App.prototype.createDownload = function(csvData,downloadLink){
+	downloadLink.classList.remove("hide");
+	downloadLink.setAttribute("href","");
+	downloadLink.setAttribute("href",csvData);
+	downloadLink.setAttribute("download", "new_data.csv");
 };
 
 App.prototype.createBlob = function(arr){
