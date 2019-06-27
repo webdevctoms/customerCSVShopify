@@ -1,13 +1,15 @@
-function App(dropZoneID,downloadID,testButtonID,convertButtonID,templateDropID){
+function App(dropZoneID,downloadID,testButtonID,convertButtonID,templateDropID,phoneNumID){
 	this.csvDropZone = document.getElementById(dropZoneID);
 	this.templateDropZone = document.getElementById(templateDropID);
 	this.downloadLink = document.getElementById(downloadID);
 	this.testButton = document.getElementById(testButtonID);
 	this.convertButton = document.getElementById(convertButtonID);
+	this.phoneNumberButton = document.getElementById(phoneNumID);
 
 	this.newShopifyData;
 	this.templateHeadingLength = 19;
 	this.commaSplitData;
+	this.numFixer;
 	this.captureCSV = new CaptureCSV();
 	this.converter = new ConvertCSV();
 	this.initApp();
@@ -34,6 +36,11 @@ App.prototype.initApp = function() {
 		this.convertClicked();
 	}.bind(this),false);
 
+	this.phoneNumberButton.addEventListener("click",function(e){
+		e.preventDefault();
+		this.phoneClicked();
+	}.bind(this),false);
+
 	this.templateDropZone.addEventListener("drop",function(e){
 		e.preventDefault();
 		this.fileDropped(e);
@@ -56,6 +63,18 @@ App.prototype.runTests = function(){
 	catch(err){
 		console.log("error testing ",err);
 	}
+};
+
+App.prototype.phoneClicked = function(){
+	console.log("phone data");
+	try{
+		this.numFixer = new FixPhoneNumbers(this.commaSplitData);
+		this.numFixer.checkNumbers();
+	}
+	catch(err){
+		console.log("error converting ",err);
+	}
+	
 };
 
 App.prototype.convertClicked = function(){
@@ -96,9 +115,11 @@ App.prototype.fileDropped = function(event){
 	this.captureCSV.readFile(csvFile)
 
 	.then(commaSplitData => {
-		console.log(commaSplitData[0].length,commaSplitData[0].length === this.templateHeadingLength);
+		//console.log(commaSplitData[0].length,commaSplitData[0].length === this.templateHeadingLength);
+		console.log(commaSplitData);
 		if(commaSplitData[0].length === this.templateHeadingLength){
 			this.converter.setHeadingRow(commaSplitData);
+			this.commaSplitData = commaSplitData;
 		}
 		else{
 			this.commaSplitData = commaSplitData;
@@ -111,4 +132,4 @@ App.prototype.fileDropped = function(event){
 	});
 };
 
-let app = new App("drop_zone","downloadLink","testData","convertData","template_drop_zone");
+let app = new App("drop_zone","downloadLink","testData","convertData","template_drop_zone","phoneData");
