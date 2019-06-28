@@ -1,10 +1,11 @@
-function App(dropZoneID,downloadID,testButtonID,convertButtonID,templateDropID,phoneNumID){
+function App(dropZoneID,downloadID,testButtonID,convertButtonID,templateDropID,phoneNumID,removePhoneID){
 	this.csvDropZone = document.getElementById(dropZoneID);
 	this.templateDropZone = document.getElementById(templateDropID);
 	this.downloadLink = document.getElementById(downloadID);
 	this.testButton = document.getElementById(testButtonID);
 	this.convertButton = document.getElementById(convertButtonID);
 	this.phoneNumberButton = document.getElementById(phoneNumID);
+	this.removePhoneButton = document.getElementById(removePhoneID);
 
 	this.newShopifyData;
 	this.templateHeadingLength = 19;
@@ -41,6 +42,11 @@ App.prototype.initApp = function() {
 		this.phoneClicked();
 	}.bind(this),false);
 
+	this.removePhoneButton.addEventListener("click",function(e){
+		e.preventDefault();
+		this.removePhoneClicked();
+	}.bind(this),false);
+
 	this.templateDropZone.addEventListener("drop",function(e){
 		e.preventDefault();
 		this.fileDropped(e);
@@ -69,7 +75,23 @@ App.prototype.phoneClicked = function(){
 	console.log("phone data");
 	try{
 		this.numFixer = new FixPhoneNumbers(this.commaSplitData);
-		this.numFixer.checkNumbers();
+		this.newNumData = this.numFixer.checkNumbers();
+		let csvData = this.createBlob(this.newNumData);
+		this.createDownload(csvData,this.downloadLink);
+	}
+	catch(err){
+		console.log("error converting ",err);
+	}
+	
+};
+
+App.prototype.removePhoneClicked = function(){
+	console.log("phone data");
+	try{
+		this.numFixer = new FixPhoneNumbers(this.commaSplitData);
+		this.newNumData = this.numFixer.removePhone();
+		let csvData = this.createBlob(this.newNumData);
+		this.createDownload(csvData,this.downloadLink);
 	}
 	catch(err){
 		console.log("error converting ",err);
