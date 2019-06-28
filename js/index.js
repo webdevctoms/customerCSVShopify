@@ -154,4 +154,4 @@ App.prototype.fileDropped = function(event){
 	});
 };
 
-let app = new App("drop_zone","downloadLink","testData","convertData","template_drop_zone","phoneData");
+let app = new App("drop_zone","downloadLink","testData","convertData","template_drop_zone","phoneData","phoneDataRemove");
